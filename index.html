@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI FORGE | Department of AI & IT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e3a8a;
+            --accent: #60a5fa;
+        }
+
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: #f8fafc; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .tech-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* --- DYNAMIC BACKGROUND ANIMATIONS --- */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+
+        .animated-bg {
+            background: linear-gradient(-45deg, #020617, #1e3a8a, #0f172a, #1e40af);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            position: relative;
+        }
+
+        .glow-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: 2;
+            pointer-events: none;
+            animation: floatBlob 20s infinite alternate ease-in-out;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+        }
+
+        /* Glassmorphism Refinement */
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .light-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animated Title */
+        .animated-title {
+            background: linear-gradient(90deg, #fff, #60a5fa, #fff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Reveal on Scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Card Styles */
+        .vertical-card {
+            position: relative;
+            border-radius: 2rem;
+            overflow: hidden;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .vertical-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.3);
+        }
+
+        .vertical-card img { transition: transform 1.2s ease; }
+        .vertical-card:hover img { transform: scale(1.1); }
+
+        .vertical-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(2, 6, 23, 0.95) 0%, rgba(2, 6, 23, 0) 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+
+        .horizontal-card {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            gap: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .horizontal-card:hover {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .horizontal-img-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 2rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Schedule Item */
+        .schedule-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .schedule-item:hover {
+            border-left-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.03);
+            padding-left: 3rem;
+        }
+
+        /* Modal */
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3rem;
+            transform: scale(0.9) translateY(40px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #memberModal.active .modal-content { transform: scale(1) translateY(0); }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #020617; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e40af; border-radius: 10px; }
+    </style>
+</head>
+<body class="custom-scrollbar overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-[60] glass shadow-2xl" id="main-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1McNAZ3zcHpt-oMAZn_xiPpJggxPBJZpN" alt="Logo" class="h-8 w-8 object-contain" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2103/2103633.png'">
+                </div>
+                <div class="text-2xl font-black text-white tracking-tighter uppercase tech-font">AI FORGE</div>
+            </div>
+            
+            <div class="space-x-10 hidden md:flex items-center font-bold text-[10px] uppercase tracking-[0.3em] text-slate-400">
+                <a href="#vmo" class="hover:text-blue-400 transition-colors">About</a>
+                <a href="#leadership" class="hover:text-blue-400 transition-colors">Leadership</a>
+                <a href="#staff" class="hover:text-blue-400 transition-colors">Staff</a>
+                <a href="#schedule" class="hover:text-blue-400 transition-colors">Schedule</a>
+                <a href="https://forms.gle/E9RaYhvcUoLsNZgB7" target="_blank" class="bg-blue-600 text-white px-8 py-3.5 rounded-full hover:bg-blue-500 transition shadow-2xl shadow-blue-600/20 transform hover:scale-105 active:scale-95">
+                    JOIN THE EVENT
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden text-white animated-bg">
+        <div class="glow-blob top-[10%] left-[5%]"></div>
+        <div class="glow-blob bottom-[15%] right-[10%]" style="animation-delay: -5s; background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0) 70%);"></div>
+        
+        <div id="particles-js"></div>
+        
+        <div class="hero-content text-center px-6 max-w-7xl z-10">
+            <div class="reveal">
+                <!-- Fix: Increased size and bold font with responsive tracking to avoid overflow in mobile view -->
+                <p class="uppercase tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.5em] text-[15px] sm:text-2xl md:text-5xl text-blue-400 font-black tech-font mb-10 animate-pulse leading-tight">
+                    Department of Artificial Intelligence <br>
+                    <span class="text-blue-500">and</span> Information Technology
+                </p>
+                <h1 class="tech-font text-6xl md:text-[10rem] mb-6 leading-none font-black animated-title tracking-tighter">
+                    AI FORGE
+                </h1>
+                <div class="flex items-center justify-center gap-6 mb-12">
+                    <div class="h-[1px] w-24 bg-gradient-to-r from-transparent to-blue-500/50"></div>
+                    <h2 class="serif text-2xl md:text-5xl italic font-light text-slate-200">Inaugural Ceremony</h2>
+                    <div class="h-[1px] w-24 bg-gradient-to-l from-transparent to-blue-500/50"></div>
+                </div>
+            </div>
+
+            <!-- Countdown -->
+            <div id="countdown" class="reveal grid grid-cols-4 gap-3 md:gap-8 mb-20 tech-font max-w-4xl mx-auto" style="transition-delay: 200ms;">
+                <div class="light-glass p-6 md:p-8 rounded-[3rem] shadow-2xl border-white/5">
+                    <span id="days" class="block text-3xl md:text-7xl font-black">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-40 font-bold mt-2 block">Days</span>
+                </div>
+                <div class="light-glass p-6 md:p-8 rounded-[3rem] shadow-2xl border-white/5">
+                    <span id="hours" class="block text-3xl md:text-7xl font-black">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-40 font-bold mt-2 block">Hours</span>
+                </div>
+                <div class="light-glass p-6 md:p-8 rounded-[3rem] shadow-2xl border-white/5">
+                    <span id="minutes" class="block text-3xl md:text-7xl font-black">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-40 font-bold mt-2 block">Mins</span>
+                </div>
+                <div class="light-glass p-6 md:p-8 rounded-[3rem] shadow-2xl border-white/5">
+                    <span id="seconds" class="block text-3xl md:text-7xl font-black text-blue-500">00</span>
+                    <span class="text-[9px] uppercase tracking-widest opacity-40 font-bold mt-2 block text-blue-500">Secs</span>
+                </div>
+            </div>
+
+            <div class="reveal flex flex-col sm:flex-row gap-8 justify-center" style="transition-delay: 400ms;">
+                <a href="https://forms.gle/E9RaYhvcUoLsNZgB7" target="_blank" class="px-14 py-6 bg-blue-600 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-blue-600/40 hover:bg-blue-500 transition-all transform hover:-translate-y-2">
+                    Join the Event
+                </a>
+                <a href="#schedule" class="px-14 py-6 border border-white/10 light-glass rounded-full font-bold uppercase tracking-[0.3em] text-[10px] hover:bg-white hover:text-blue-950 transition-all transform hover:-translate-y-2">
+                    Explore Schedule
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-20 z-10">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <!-- Executive Board Section - Switched to Horizontal Layout -->
+    <section id="leadership" class="py-32 px-6 bg-slate-950 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center mb-28 reveal">
+            <span class="text-blue-500 font-black uppercase tracking-[0.5em] text-[9px] mb-4 block">Core Architects</span>
+            <h2 class="serif text-5xl md:text-8xl text-white mb-8">Executive Board</h2>
+            <div class="h-2 w-32 bg-blue-600 mx-auto rounded-full shadow-[0_0_20px_rgba(59,130,246,0.6)]"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- Board Member 1 -->
+            <div class="reveal horizontal-card group cursor-pointer" onclick="openModal('Deena.R', 'President', 'A dedicated leader committed to representing student interests, fostering academic excellence, and driving impactful departmental initiatives', 'https://lh3.googleusercontent.com/u/0/d/1DQ-fO3aCdnh8ovr73_-ECnOlCLA_K0V_')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1DQ-fO3aCdnh8ovr73_-ECnOlCLA_K0V_" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">President</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Deena.R</h3>
+                </div>
+            </div>
+
+            <!-- Board Member 2 -->
+            <div class="reveal horizontal-card group cursor-pointer" style="transition-delay: 50ms;" onclick="openModal('Kanimozhi.M', 'Vice President', 'Supports the president in leading the department and ensures smooth coordination of activities and initiatives.', 'https://lh3.googleusercontent.com/u/0/d/19U1vczyd-uoQPUEHf-CTpxTiI18JvxRs')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/19U1vczyd-uoQPUEHf-CTpxTiI18JvxRs" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">Vice President</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Kanimozhi.M</h3>
+                </div>
+            </div>
+
+            <!-- Board Member 3 -->
+            <div class="reveal horizontal-card group cursor-pointer" style="transition-delay: 100ms;" onclick="openModal('Prathisha.K', 'Secretary', 'Efficiently manages club records, communication, and coordination to ensure smooth and organized operations.', 'https://lh3.googleusercontent.com/u/0/d/1YxKBB1XvZuAohwpGfGvGJ75jZbGGYWEA')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1YxKBB1XvZuAohwpGfGvGJ75jZbGGYWEA" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">Secretary</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Prathisha.K</h3>
+                </div>
+            </div>
+
+            <!-- Board Member 4 -->
+            <div class="reveal horizontal-card group cursor-pointer" onclick="openModal('Girivasan.K.R', 'Vice Secretary', 'Assists the secretary in managing records, communication, and coordination of departmental activities.', 'https://lh3.googleusercontent.com/u/0/d/1ysdYHBKLtHg36o8WaM0leptizNFCM6J8')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1ysdYHBKLtHg36o8WaM0leptizNFCM6J8" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">Vice Secretary</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Girivasan.K.R</h3>
+                </div>
+            </div>
+
+            <!-- Board Member 5 -->
+            <div class="reveal horizontal-card group cursor-pointer" style="transition-delay: 50ms;" onclick="openModal('Yashwanth.K.R', 'Treasurer', 'Manages and safeguards the department’s funds, ensuring transparent and responsible financial operations.', 'https://lh3.googleusercontent.com/u/0/d/1frpm8VIFFA4tEtcpIZKTDc2oOxGU4xr4')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1frpm8VIFFA4tEtcpIZKTDc2oOxGU4xr4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">Treasurer</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Yashwanth.K.R</h3>
+                </div>
+            </div>
+
+            <!-- Board Member 6 -->
+            <div class="reveal horizontal-card group cursor-pointer" style="transition-delay: 100ms;" onclick="openModal('Risha.V', 'Vice Treasurer', 'Assists in managing departmental funds and supports transparent and accurate financial operations.', 'https://lh3.googleusercontent.com/u/0/d/1idaQJJisq-YWL_6-b8ValgbbpcSlLynD')">
+                <div class="horizontal-img-container">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1idaQJJisq-YWL_6-b8ValgbbpcSlLynD" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div>
+                    <p class="text-blue-400 text-[10px] font-black uppercase tracking-widest mb-2">Vice Treasurer</p>
+                    <h3 class="text-2xl font-black text-white tech-font">Risha.V</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Administration & Staff Section - Switched to Vertical Layout -->
+    <section id="staff" class="py-32 px-6 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto text-center mb-24 reveal text-slate-900">
+            <span class="text-blue-600 font-bold uppercase tracking-[0.5em] text-[10px] mb-4 block">Academic Support</span>
+            <h2 class="serif text-5xl md:text-7xl text-slate-950 mb-6">Administration & Staff</h2>
+            <div class="h-1.5 w-24 bg-blue-600 mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div class="reveal vertical-card group cursor-pointer" onclick="openModal('Hon. Dr.R.Rajendran', 'Secretary', 'Leadership and growth.', 'https://lh3.googleusercontent.com/u/0/d/1IvTS8SvCtACO-e3Rt3RUvah74jyy4521')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1IvTS8SvCtACO-e3Rt3RUvah74jyy4521" alt="S" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Secretary</p>
+                    <h3 class="text-xl font-black text-white tech-font">Dr.R.Rajendran</h3>
+                </div>
+            </div>
+
+            <div class="reveal vertical-card group cursor-pointer" style="transition-delay: 50ms;" onclick="openModal('Dr.J.Arputha Vijaya Selvi', 'Principal', 'Leading academic excellence.', 'https://lh3.googleusercontent.com/u/0/d/1BNOWWW6e1t5tUCKxeKRHsENmsw4b4X3I')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1BNOWWW6e1t5tUCKxeKRHsENmsw4b4X3I" alt="P" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Principal</p>
+                    <h3 class="text-xl font-black text-white tech-font">Dr.J.Arputha Vijaya Selvi</h3>
+                </div>
+            </div>
+
+            <div class="reveal vertical-card group cursor-pointer" style="transition-delay: 100ms;" onclick="openModal('Dr.S.Sivakumar', 'Vice Principal', 'Academic coordination.', 'https://lh3.googleusercontent.com/u/0/d/1o0ADxfbdpnYDosL-hlFHU0IN3GVbDOUg')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1o0ADxfbdpnYDosL-hlFHU0IN3GVbDOUg" alt="VP" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Vice Principal</p>
+                    <h3 class="text-xl font-black text-white tech-font">Dr.S.Sivakumar</h3>
+                </div>
+            </div>
+
+            <div class="reveal vertical-card group cursor-pointer" onclick="openModal('Ms.B.Sangeetha', 'HOD', 'Department head.', 'https://lh3.googleusercontent.com/u/0/d/10aMgk5_ypDakdolj5V2uE4oDSu1r7wiy')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/10aMgk5_ypDakdolj5V2uE4oDSu1r7wiy" alt="H" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Head of Dept.</p>
+                    <h3 class="text-xl font-black text-white tech-font">Ms.B.Sangeetha</h3>
+                </div>
+            </div>
+
+            <div class="reveal vertical-card group cursor-pointer" style="transition-delay: 50ms;" onclick="openModal('Ms.V.Gayathri   (AP)', 'Staff Incharge', 'Club advisor.', 'https://lh3.googleusercontent.com/u/0/d/1o_kfRk4QM6k-hVcJ4lkr-lqALlwbACky')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1o_kfRk4QM6k-hVcJ4lkr-lqALlwbACky" alt="I" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Staff Incharge</p>
+                    <h3 class="text-xl font-black text-white tech-font">MS.V.Gayathri</h3>
+                </div>
+            </div>
+
+            <div class="reveal vertical-card group cursor-pointer" style="transition-delay: 100ms;" onclick="openModal('Mr.D.Rajkumar(AP)', 'Staff Incharge', 'Technical mentor.', 'https://lh3.googleusercontent.com/u/0/d/1D3OKRNW7DrxDx9V_qVu6BVIC5UekoNPs')">
+                <div class="aspect-[3/4]">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1D3OKRNW7DrxDx9V_qVu6BVIC5UekoNPs" alt="I" class="w-full h-full object-cover">
+                </div>
+                <div class="vertical-overlay">
+                    <p class="text-blue-400 text-[9px] font-black uppercase tracking-widest mb-1">Staff Incharge</p>
+                    <h3 class="text-xl font-black text-white tech-font">Mr.D.Rajkumar</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="bg-slate-950 py-32 px-6 text-white overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+            <div class="glow-blob top-[20%] right-[-5%] bg-blue-600/5"></div>
+        </div>
+        
+        <div class="max-w-5xl mx-auto relative z-10">
+            <div class="text-center mb-28 reveal">
+                <span class="text-blue-400 font-bold uppercase tracking-[0.5em] text-[9px] mb-4 block">March 2, 2026</span>
+                <h2 class="tech-font text-6xl md:text-[5rem] uppercase tracking-tighter font-black">Event Flow</h2>
+            </div>
+            
+            <div class="space-y-12">
+                <div class="reveal schedule-item group cursor-pointer" onclick="openEventRules('Inauguration Ceremony', '<li>Formal dress code.</li><li>Guests seated by 9:45 AM.</li><li>Silent mode enabled.</li>')">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-blue-500/20 group-hover:text-blue-500 transition-colors shrink-0">10:00 AM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest group-hover:text-blue-400 transition mt-2">Inauguration Ceremony</h3>
+                </div>
+
+                <div class="reveal schedule-item group cursor-pointer" style="transition-delay: 100ms;" onclick="openEventRules('Mini Project Expo', '<li>Max 4 students per team.</li><li>Working demo required.</li><li>5 min pitch.</li>')">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-blue-500/20 group-hover:text-blue-500 transition-colors shrink-0">12:00 PM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest group-hover:text-blue-400 transition mt-2">Mini Project Expo</h3>
+                </div>
+
+                <div class="reveal schedule-item group opacity-50" style="transition-delay: 200ms;">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-emerald-500/10 shrink-0">12:30 PM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest text-slate-700 italic mt-2">Lunch Break</h3>
+                </div>
+
+                <div class="reveal schedule-item group cursor-pointer" style="transition-delay: 300ms;" onclick="openEventRules('Paperx', '<li>IEEE format mandatory.</li><li>Plagiarism below 15%.</li>')">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-blue-500/20 group-hover:text-blue-500 transition-colors shrink-0">01:00 PM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest group-hover:text-blue-400 transition mt-2">Paperx</h3>
+                </div>
+
+                <div class="reveal schedule-item group cursor-pointer" style="transition-delay: 400ms;" onclick="openEventRules('Smart Tech', '<li>Max 3 minutes.</li><li>Tech theme mandatory.</li>')">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-blue-500/20 group-hover:text-blue-500 transition-colors shrink-0">02:00 PM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest group-hover:text-blue-400 transition mt-2">Smart Tech</h3>
+                </div>
+
+                <div class="reveal schedule-item group cursor-pointer" style="transition-delay: 500ms;" onclick="openEventRules('InfographiX', '<li>Individual Participation.</li><li>Time Limitation 45 min.</li>')">
+                    <span class="text-4xl md:text-6xl tech-font font-light text-blue-500/20 group-hover:text-blue-500 transition-colors shrink-0">03:00 PM</span>
+                    <h3 class="text-3xl font-black uppercase tracking-widest group-hover:text-blue-400 transition mt-2">InfographiX</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vmo" class="py-32 px-6 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+            <div class="reveal p-12 rounded-[4rem] bg-slate-50 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 group">
+                <div class="w-16 h-16 bg-blue-600 rounded-[1.5rem] flex items-center justify-center text-white mb-10 shadow-lg group-hover:rotate-12 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </div>
+                <h2 class="tech-font text-3xl font-black text-slate-900 mb-6 uppercase tracking-tight">Vision</h2>
+                <p class="text-slate-500 leading-relaxed font-light text-lg">To be the global benchmark in AI-driven innovation where tech solves real-world human needs.</p>
+            </div>
+
+            <div class="reveal p-12 rounded-[4rem] bg-slate-900 text-white shadow-2xl hover:bg-blue-950 transition-all duration-500" style="transition-delay: 150ms;">
+                <div class="w-16 h-16 bg-blue-500 rounded-[1.5rem] flex items-center justify-center text-white mb-10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h2 class="tech-font text-3xl font-black mb-6 uppercase tracking-tight">Mission</h2>
+                <p class="text-blue-100/70 leading-relaxed font-light text-lg">Providing an elite collaborative ecosystem for exploring AI and IT through ethical technical leadership.</p>
+            </div>
+
+            <div class="reveal p-12 rounded-[4rem] bg-slate-50 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 group" style="transition-delay: 300ms;">
+                <div class="w-16 h-16 bg-blue-600 rounded-[1.5rem] flex items-center justify-center text-white mb-10 group-hover:rotate-12 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                </div>
+                <h2 class="tech-font text-3xl font-black text-slate-900 mb-6 uppercase tracking-tight">Goals</h2>
+                <ul class="text-slate-500 space-y-4 text-base font-light">
+                    <li class="flex items-center gap-4"><div class="w-2 h-2 bg-blue-600 rounded-full"></div> Bridge theory & industry.</li>
+                    <li class="flex items-center gap-4"><div class="w-2 h-2 bg-blue-600 rounded-full"></div> High-impact projects.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- About the Club Section -->
+    <section id="about-club" class="py-32 px-6 bg-slate-950 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal">
+                    <span class="text-blue-500 font-black uppercase tracking-[0.5em] text-[9px] mb-4 block">The Forge Community</span>
+                    <h2 class="serif text-5xl md:text-7xl text-white mb-8 leading-tight">The <span class="text-blue-500">Technical</span> Heart.</h2>
+                    <p class="text-slate-400 text-lg leading-relaxed font-light mb-8">
+                        AI FORGE isn't just a club; it's a launchpad for future innovators. We bridge classroom theory and industry application to solve humanity's challenges.
+                    </p>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="p-6 light-glass rounded-3xl">
+                            <h4 class="text-blue-400 text-3xl font-black tech-font mb-2">5+</h4>
+                            <p class="text-slate-500 text-xs uppercase tracking-widest font-bold">Monthly Meetups</p>
+                        </div>
+                        <div class="p-6 light-glass rounded-3xl">
+                            <h4 class="text-blue-400 text-3xl font-black tech-font mb-2">10+</h4>
+                            <p class="text-slate-500 text-xs uppercase tracking-widest font-bold">Events on a Month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-6 reveal">
+                    <div class="p-8 light-glass rounded-[2.5rem] border-white/5 group">
+                        <div class="flex items-center gap-6">
+                            <div class="w-14 h-14 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-xl mb-1">Workshops</h4>
+                                <p class="text-slate-500 text-sm">Deep dives into Generative AI and Computer Vision.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-8 light-glass rounded-[2.5rem] border-white/5 group">
+                        <div class="flex items-center gap-6">
+                            <div class="w-14 h-14 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold text-xl mb-1">Appathon</h4>
+                                <p class="text-slate-500 text-sm">Activbites Appathon: Build. Innovate. Impact.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="memberModal" role="dialog" aria-modal="true" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-slate-950/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="modal-content relative bg-slate-900 w-full max-w-2xl overflow-hidden flex flex-col md:flex-row shadow-[0_0_80px_rgba(59,130,246,0.3)]">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-20 bg-white/10 hover:bg-blue-600 p-3 rounded-full transition-all text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="w-full md:w-1/2 aspect-square md:aspect-auto">
+                <img id="modalImg" src="" alt="Detail" class="w-full h-full object-cover">
+            </div>
+            <div class="w-full md:w-1/2 p-12 flex flex-col justify-center">
+                <p id="modalRole" class="text-blue-400 font-bold uppercase tracking-[0.4em] text-[10px] mb-4 tech-font"></p>
+                <h3 id="modalName" class="tech-font text-4xl text-white mb-8 font-black tracking-tight uppercase"></h3>
+                <div id="modalDesc" class="text-slate-400 leading-relaxed font-light text-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-slate-800 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-slate-600 text-[10px] uppercase tracking-[1em] tech-font font-bold">AI FORGE © 2026 | Dept. of AI & IT</p>
+        </div>
+    </footer>
+
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 70, "density": { "enable": true, "value_area": 1000 } },
+                "color": { "value": "#3b82f6" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 180, "color": "#3b82f6", "opacity": 0.15, "width": 1 },
+                "move": { "enable": true, "speed": 1.2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "retina_detect": true
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const modal = document.getElementById('memberModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalName = modal.querySelector('h3');
+        const modalRole = modal.querySelector('p');
+        const modalDesc = modal.querySelector('.text-slate-400');
+
+        function openModal(name, role, desc, img) {
+            modalName.innerText = name;
+            modalRole.innerText = role;
+            modalDesc.innerHTML = `<p class="italic">"${desc}"</p>`;
+            modalImg.src = img;
+            showModal();
+        }
+
+        function openEventRules(name, rulesListHtml) {
+            modalName.innerText = name;
+            modalRole.innerText = "Event Guidelines";
+            modalDesc.innerHTML = `<ul class="list-disc pl-5 space-y-4 text-slate-300 font-normal mt-2">${rulesListHtml}</ul>`;
+            modalImg.src = "https://lh3.googleusercontent.com/u/0/d/1ObFG9c9Mxw27hpfAbk9Y5IfnjEUapDs3";
+            showModal();
+        }
+
+        function showModal() {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.add('active');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            }, 50);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+        });
+
+        const targetDate = new Date("March 2, 2026 10:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "EVENT LIVE";
+                return;
+            }
+            const days = Math.floor(distance / 86400000);
+            const hours = Math.floor((distance % 86400000) / 3600000);
+            const minutes = Math.floor((distance % 3600000) / 60000);
+            const seconds = Math.floor((distance % 60000) / 1000);
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
